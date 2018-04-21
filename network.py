@@ -1,32 +1,32 @@
 import tensorflow as tf
 import os
 from time import time
+from progressbar import ProgressBar
 
 from common import cfg
 import model, data_provider
 
 eps = 1e-10
 
+def show_epoch(progress, step, train_loss, val_loss):# {{{
+    print('[LOG] loss #%d: train %.3f val %.3f' % \
+            (step, train_loss, val_loss))
+    progress.update(step)
+# }}}
 
 class Network(object):
     def __init__(self, args):# {{{
         self.args = args
         self.placeholder = {}
         self.net()
+        self.progress = ProgressBar(\
+                maxval=args.step if args.step >= 0 else 1e18)
     # }}}
     def feed_dict(self, data):# {{{
         #   build feed_dict
         #   change dict{str->data} to dict{tensor->data}
         return {self.placeholder[key]: value \
                 for key, value in data.items()}
-    # }}}
-    def show_epoch(self, loss, status):# {{{
-        #   show training logs in shell
-        current_time = time() - self.start_time
-        eta = 'forever' if self.args.step == -1 else '%.2f' % \
-                (current_time / self.step * (self.args.step - self.step))
-        print('[LOG] #%d (%s): loss=%.4f time=%.2f eta=%s' % \
-                (self.step, status, loss, current_time, eta))
     # }}}
 
 
@@ -131,9 +131,9 @@ class Network(object):
                     os.path.join(self.args.logdir, 'val'))
             
             print('[LOG] training started ..')
-            self.step, self.start_time = 0, time()
-            while self.step < self.args.step or self.args.step == -1:
-                self.step += 1
+            step, self.start_time = 0, time()
+            while step < self.args.step or self.args.step == -1:
+                step += 1
 
                 #   get train data
                 train_batch = data_provider.get_train(self.args.batch_size)
@@ -146,25 +146,22 @@ class Network(object):
                 )
 
                 #   recorde summary of each step for tensorboard
-                train_writer.add_summary(train_summary, self.step)
+                train_writer.add_summary(train_summary, step)
 
                 #   save model
-                if self.step % self.args.save_step == 0:
-                    name = 'model_%d.pkl' % self.step
+                if step % self.args.save_step == 0:
+                    name = 'model_%d.pkl' % step
                     saver.save(sess, \
                             os.path.join(self.args.model_path, name))
 
                 #   display train/val loss
-                if self.step == 1 or \
-                        self.step % self.args.val_step == 0:
-                    self.show_epoch(loss, 'train')
-
+                if step == 1 or step % self.args.val_step == 0:
                     val_batch = data_provider.get_val(self.args.batch_size)
-                    val_summary, loss = sess.run(\
+                    val_summary, val_loss = sess.run(\
                             [self.summary, self.loss_op], \
                             feed_dict=self.feed_dict(val_batch))
-                    val_writer.add_summary(val_summary, self.step)
-                    self.show_epoch(loss, 'validation')
+                    val_writer.add_summary(val_summary, step)
+                    show_epoch(self.progress, step, loss, val_loss)
         print('[LOG] Training finished ..')
             
     # }}}

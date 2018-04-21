@@ -7,7 +7,13 @@
 2. python3-tensorflow
 3. python3-tensorboard
 4. python3-numpy
+5. python3-progressbar2
 ```
+
+```shell
+$ pip3 install numpy tensorflow tensorboard progressbar2
+```
+
 ##  run
 
 ### prepare
