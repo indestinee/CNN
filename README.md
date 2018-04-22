@@ -34,11 +34,14 @@ make a new class **Myconfig** in **common.py** and make **cfg**=**Newconfig()** 
 $   python3 -h # to see args
 ```
 ```
+usage: train.py [-h] [-lr LEARNING_RATE] [-s STEP] [-b BATCH_SIZE]
+                [-c CHECKPOINT] [--val-step VAL_STEP] [--save-step SAVE_STEP]
+                [--logdir LOGDIR]
+
 Training of CNN
 
 optional arguments:
   -h, --help            show this help message and exit
-  --name NAME           name of the task
   -lr LEARNING_RATE, --learning-rate LEARNING_RATE
   -s STEP, --step STEP  total training step, -1 means infinite
   -b BATCH_SIZE, --batch-size BATCH_SIZE
@@ -48,10 +51,7 @@ optional arguments:
   --val-step VAL_STEP   how many training steps before each validation
   --save-step SAVE_STEP
                         how many training steps before each model-saving
-  --model-path MODEL_PATH
-                        path to save model
-  --logdir LOGDIR       path to save training logs
-
+  --logdir LOGDIR       path to save training logs and models
 ```
 
 ```shel

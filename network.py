@@ -17,6 +17,8 @@ def show_epoch(progress, step, train_loss, val_loss):# {{{
 class Network(object):
     def __init__(self, args):# {{{
         self.args = args
+        self.model_path = os.path.join(args.logdir, 'models')
+        self.logdir = os.path.join(args.logdir, 'models')
         self.placeholder = {}
         self.net()
         self.progress = ProgressBar(\
@@ -126,9 +128,9 @@ class Network(object):
 
             #   train/val writer of tensorboard
             train_writer = tf.summary.FileWriter(\
-                    os.path.join(self.args.logdir, 'train'), sess.graph)
+                    os.path.join(self.logdir, 'train'), sess.graph)
             val_writer = tf.summary.FileWriter(\
-                    os.path.join(self.args.logdir, 'val'))
+                    os.path.join(self.logdir, 'val'))
             
             print('[LOG] training started ..')
             step, self.start_time = 0, time()
@@ -153,7 +155,7 @@ class Network(object):
                 if step % self.args.save_step == 0:
                     name = 'model_%d.pkl' % step
                     saver.save(sess, \
-                            os.path.join(self.args.model_path, name))
+                            os.path.join(self.model_path, name))
 
                 #   display train/val loss
                 if step == 1 or step % self.args.val_step == 0:
