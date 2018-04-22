@@ -62,7 +62,7 @@ class Network(object):
             hidden layer of the net
         '''
         with tf.name_scope('hidden_layer') as name_scope:
-            return model.demo_model(x, is_training)
+            return model.alexnet_model(x, is_training)
     # }}}
     def net(self):# {{{
         #   input layer
@@ -94,8 +94,10 @@ class Network(object):
         self.loss_op = self.func_loss(x, y)
         
         #   optimizer & learning rate
-        self.optimizer = tf.train.AdamOptimizer(\
-                learning_rate=self.args.learning_rate)
+        # self.optimizer = tf.train.AdamOptimizer(\
+                # learning_rate=self.args.learning_rate)
+        self.optimizer = tf.train.MomentumOptimizer(\
+                self.args.learning_rate, 0.9)
         self.train_op = self.optimizer.minimize(self.loss_op)
         
         #   prediction result
