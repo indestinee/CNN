@@ -9,7 +9,7 @@ def get_args():# {{{
     parser.add_argument('-lr', '--learning-rate', type=float, default=1e-5)
     parser.add_argument('-s', '--step', type=int, default=-1, \
             help='total training step, -1 means infinite')
-    parser.add_argument('-b', '--batch-size', type=int, default=256, \
+    parser.add_argument('-b', '--batch-size', type=int, default=16, \
             help='batch size of each step')
     parser.add_argument('-c', '--checkpoint', type=str, default=None, \
             help='path to load pretrained model, default for no loading')

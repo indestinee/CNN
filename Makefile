@@ -16,3 +16,6 @@ install:
 	pip3 install tensorflow
 	#	pip3 install tensorflow-gpu # if u need gpu version
 	pip3 install progressbar2
+
+cache:
+	rm -rf cache

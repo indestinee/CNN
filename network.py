@@ -3,9 +3,8 @@ import os
 from time import time
 from progressbar import ProgressBar
 
-from common import cfg
 import model, data_provider
-
+cfg = data_provider.cfg
 eps = 1e-10
 
 def show_epoch(progress, step, train_loss, val_loss):# {{{
@@ -136,7 +135,8 @@ class Network(object):
                 step += 1
 
                 #   get train data
-                train_batch = data_provider.get_train(self.args.batch_size)
+                train_batch = data_provider.dp.get_train(\
+                        self.args.batch_size)
 
                 #   get training summary, loss value, 
                 #   and parameters updating
@@ -156,7 +156,8 @@ class Network(object):
 
                 #   display train/val loss
                 if step == 1 or step % self.args.val_step == 0:
-                    val_batch = data_provider.get_val(self.args.batch_size)
+                    val_batch = data_provider.dp.get_val(\
+                            self.args.batch_size)
                     val_summary, val_loss = sess.run(\
                             [self.summary, self.loss_op], \
                             feed_dict=self.feed_dict(val_batch))
