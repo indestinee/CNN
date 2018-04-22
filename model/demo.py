@@ -17,14 +17,14 @@ def conv_maxpool_layer(x, name, filters, kernel_size, padding='same', \
 
 def prod(x):
     #   return production of an array
-    return np.array(x).prod()
+    return int(np.array(x).prod())
 
 def dense_layer(x, is_training, name='dense_layer', \
         units=1024, activation=tf.nn.relu):
     with tf.name_scope('dense_layer'):
         #   reshape tensor from [batch_size, w, h, c] 
         #   to [batch_size, w*h*c]
-        x = tf.reshape(x, [-1, prod(x.shape[1:])], name='%s.reshape'%name) 
+        x = tf.reshape(x, (-1, prod(x.shape[1:])), name='%s.reshape'%name) 
         x = tf.layers.dense(inputs=x, units=units, activation=activation, \
                 name='%s.fully_connect'%name)
         x = tf.layers.dropout(inputs=x, rate=0.4, \

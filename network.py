@@ -54,7 +54,9 @@ class Network(object):
                 loss tensor (scalar)
         '''
         with tf.name_scope('loss'):
-            x = tf.nn.softmax(x, axis=1, name='softmax')
+            # x = tf.nn.softmax(x, axis=1, name='softmax')
+            x = tf.exp(x)
+            x = x / tf.reduce_sum(x, axis=1, keep_dims=True)
             return -tf.reduce_mean(y*tf.log(x+eps) + (1-y)*tf.log(1-x+eps))
     # }}}
     def hidden_layer(self, x, is_training):# {{{
