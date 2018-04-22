@@ -18,11 +18,16 @@ $ pip3 install numpy tensorflow tensorboard progressbar2
 
 ### prepare
 
-1.  add/delete args if needed in **./train.py** function **get\_args**
-2.  change loss function, result, input layer & ground truth placeholder in **./network.py** class **Network**, (function **net**, **func\_loss**, **func\_result**)
-3.  add new network architecture in **./model/[name].py** and import it in **./model/\_\_init\_\_.py**
-4.  use new network architecture in **./network.py** class **Network** function **hidden\_layer**
-5.  change input data in **./data\_provider.py** function **get\_\*\*\*\***, the keys of dict should be corresponding to the names of placerholder in **./network.py** class **Network** function **net**
+#### 1. training
+add/delete args if needed in **./train.py** function **get\_args**
+#### 2. loss/IO of network
+change loss function, result, input layer & ground truth placeholder in **./network.py** class **Network**, (function **net**, **func\_loss**, **func\_result**)
+#### 3. network architecture
+add new network architecture in **./model/[name].py** and import it in **./model/\_\_init\_\_.py**. then use it in **./network.py** class **Network** function **hidden\_layer**
+#### 4. dataset
+change data class in **./data\_provider.py** **dp**=**Mydata()**, the class should be defined in **./dataset/xxx.py**, and import it in **./dataset/\_\_init\_\_.py** the keys of return dict should be corresponding to the names of placerholder in **./network.py** class **Network** function **net**
+#### 5. config
+make a new class **Myconfig** in **common.py** and make **cfg**=**Newconfig()** in **./data\_provider.py**
 
 ### train
 ```shell
@@ -70,6 +75,10 @@ $   tensorboard --logdir=train_log
     - load hidden layer from **./model/\_\_init\_\_.py**
 * ./model/\_\_init\_\_.py
     - load models from **./model/\*.py**
+* ./data\_provider.py
+    - get data from **./dataset/\_\_init\_\_.py**
+* ./dataset/\_\_init\_\_.py
+    - get dataset from **./dataset/\*.py**
  
 
 ## file tree
@@ -87,13 +96,17 @@ $   tensorboard --logdir=train_log
         - get\_val # the same
         - get\_test # the same
     + commom.py # config of image shape and something
-        - data\_provider.py # provide data (not complete yet)
+        - data\_provider.py # provide data
     + README.md # me
     + Makefile # some commonds
     + IO.py # read data from dir data/
     + model/ # store basic models or new model   
-        - \_\_init\_\_.py # import model from dir model/, like line #1
+        - \_\_init\_\_.py # import model from dir model/
         - demo.py # demo model
+    + dataset/ # provider diffrent dataset
+        - \_\_init\_\_.py # import dataset from dir dataset/
+        - mnist.py # mnist dataset
+        - flowers.py # oxford 17 flowers dataset
     + scripts/ # store some shells
     + data/ # store data
     + train\_log/ # training log (default path)
