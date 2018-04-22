@@ -18,7 +18,7 @@ class Network(object):
     def __init__(self, args):# {{{
         self.args = args
         self.model_path = os.path.join(args.logdir, 'models')
-        self.logdir = os.path.join(args.logdir, 'models')
+        self.logdir = os.path.join(args.logdir, 'train_events')
         self.placeholder = {}
         self.net()
         self.progress = ProgressBar(\
