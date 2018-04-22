@@ -1,6 +1,5 @@
 from dataset import *
 import common
-from IPython import embed
 
 class Pipe(object):
     def __init__(self, name, port):

@@ -1,5 +1,4 @@
 from utils import Cache
-from IPython import embed
 import numpy as np
 
 class Sample(object):
