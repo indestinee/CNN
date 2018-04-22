@@ -6,6 +6,7 @@ from progressbar import ProgressBar
 import model, data_provider
 cfg = data_provider.cfg
 eps = 1e-10
+inf = 1000000000
 
 def show_epoch(progress, step, train_loss, val_loss):# {{{
     print('[LOG] loss #%d: train %.3f val %.3f' % \
@@ -19,7 +20,7 @@ class Network(object):
         self.placeholder = {}
         self.net()
         self.progress = ProgressBar(\
-                maxval=args.step if args.step >= 0 else 1e18)
+                maxval=args.step if args.step >= 0 else inf)
     # }}}
     def feed_dict(self, data):# {{{
         #   build feed_dict
