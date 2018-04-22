@@ -1,6 +1,5 @@
 import tarfile, pickle, cv2, re
 import numpy as np
-from IPython import embed
 
 def load_flowers17(path, shape):
     tar = tarfile.open(path)    #   read 17flowers.tar.gz
