@@ -1,6 +1,9 @@
 all:
 	@
 
+prepare:
+	./scripts/prepare.sh
+
 train:
 	python3 train.py
 
