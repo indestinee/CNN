@@ -13,6 +13,12 @@
 ```shell
 $ pip3 install numpy tensorflow tensorboard progressbar2
 ```
+## prepare
+
+```shell
+$ make prepare          #   both work
+$ ./scripts/prepare.sh  #   both work
+```
 
 ##  run
 
