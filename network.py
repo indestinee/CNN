@@ -71,6 +71,7 @@ class Network(object):
                     name='input_data')  #   input data
             y = tf.placeholder('float', shape=[None, *cfg.output_shape], \
                     name='label')       #   ground truth
+            x = x / 255 #   [0, 1]
 
             #   specify the status of net
             is_training = tf.placeholder(tf.bool, name='is_training')
@@ -91,7 +92,21 @@ class Network(object):
                 name='logits')
         
         #   loss function
-        self.loss_op = self.func_loss(x, y)
+        cross_entropy_loss = self.func_loss(x, y)
+        #   save loss for tensorboard
+        tf.summary.scalar('cross entropy', cross_entropy_loss)
+
+        variables = \
+                tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
+        l2_regularizer = tf.contrib.layers.l2_regularizer(\
+                self.args.weight_decay)
+        l2_regularization_loss = tf.reduce_sum(\
+                [l2_regularizer(variable) for variable in variables])
+        tf.summary.scalar('L2 regularization', l2_regularization_loss)
+
+        self.loss_op = cross_entropy_loss + \
+                l2_regularization_loss
+        tf.summary.scalar('total loss', self.loss_op)
         
         #   optimizer & learning rate
         # self.optimizer = tf.train.AdamOptimizer(\
@@ -103,8 +118,6 @@ class Network(object):
         #   prediction result
         self.predict_op = self.func_result(x)
 
-        #   save loss for tensorboard
-        tf.summary.scalar('loss', self.loss_op)
 
         #   merge all summary for tensorboard
         self.summary = tf.summary.merge_all()

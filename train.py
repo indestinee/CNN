@@ -10,7 +10,9 @@ def get_args():# {{{
     parser.add_argument('-b', '--batch-size', type=int, default=16, \
             help='batch size of each step')
     parser.add_argument('-c', '--checkpoint', type=str, default=None, \
-            help='path to load pretrained model, default for no loading')
+            help='path to load pretrained model')
+    parser.add_argument('-w', '--weight-decay', type=float, \
+            default=1e-5, help='weight decay')
     parser.add_argument('--val-step', type=int, default=10, \
             help='how many training steps before each validation')
     parser.add_argument('--save-step', type=int, default=1000,
