@@ -55,7 +55,7 @@ class Network(object):
         '''
         with tf.name_scope('loss'):
             x = tf.nn.softmax(x, dim=1, name='softmax')
-            return -tf.reduce_mean(y*tf.log(x+eps) + (1-y)*tf.log(1-x+eps))
+            return -tf.reduce_mean(y*tf.log(x+eps))
     # }}}
     def hidden_layer(self, x, is_training):# {{{
         '''
