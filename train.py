@@ -4,7 +4,7 @@ from network import Network
 
 def get_args():# {{{
     parser = argparse.ArgumentParser(description='Training of CNN')
-    parser.add_argument('-lr', '--learning-rate', type=float, default=1e-5)
+    parser.add_argument('-lr', '--learning-rate', type=float, default=1e-3)
     parser.add_argument('-s', '--step', type=int, default=-1, \
             help='total training step, -1 means infinite')
     parser.add_argument('-b', '--batch-size', type=int, default=16, \
@@ -12,7 +12,7 @@ def get_args():# {{{
     parser.add_argument('-c', '--checkpoint', type=str, default=None, \
             help='path to load pretrained model')
     parser.add_argument('-w', '--weight-decay', type=float, \
-            default=1e-5, help='weight decay')
+            default=1e-3, help='weight decay')
     parser.add_argument('--val-step', type=int, default=10, \
             help='how many training steps before each validation')
     parser.add_argument('--save-step', type=int, default=1000,
