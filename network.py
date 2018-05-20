@@ -38,8 +38,8 @@ class Network(object):
                 result (label, prediction or sth.) of final result
         '''
         with tf.name_scope('prediction'):
-            _class = tf.argmax(x, axis=1)
             _score = tf.nn.softmax(x, dim=1, name="softmax_tensor")
+            _class = tf.argmax(x, axis=1)
             return _class, _score
     # }}}
     def func_loss(self, x, y):# {{{
@@ -187,8 +187,10 @@ class Network(object):
 
         #   saver to save/restore model to/from path
         saver = tf.train.Saver()
-
+        correct = 0
+        total = 0
         #   tf session
+        result = []
         with tf.Session() as sess:
 
             #   run initalizer for all variables
@@ -205,11 +207,23 @@ class Network(object):
             print('[LOG] testing started ..')
             step, self.start_time = 0, time()
             
-            while test_data in data_provider.dp.get_test(self.args.batch_size):
+            for test_data in \
+                    data_provider.dp.get_test(self.args.batch_size):
                 prediction = sess.run([self.predict_op], \
-                        feed_dict=self.feed_dict(test_data))
-                print(test_data)
-                print(prediction)
+                        feed_dict=self.feed_dict(test_data))[0]
+                total += len(test_data['label'])
+
+                for i in range(len(prediction[0])):
+                    result.append([ground_truth[i], prediction[0][i], \
+                            prediction[1][i]])
+                ground_truth = np.argmax(test_data['label'], axis=1)
+                correct += np.sum((ground_truth == prediction[0]) * 1)
         print('[LOG] testing finished ..')
+
+        print('[LOG] %d / %d = %.2f%%' % \
+                (correct, total, correct / total * 100))
+        with open('./prediction.txt', 'w') as f:
+            for each in result:
+                f.write('%d %d %f' % (each[0], each[1], each[2]))
             
     # }}}
