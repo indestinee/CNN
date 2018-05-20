@@ -1,5 +1,6 @@
 from utils import Cache
 import numpy as np
+import os, pickle
 
 class Sample(object):
     def __init__(self):

@@ -42,6 +42,14 @@ class Network(object):
             _class = tf.argmax(x, axis=1)
             return _class, _score
     # }}}
+    def func_accuracy(self, x, y):
+        with tf.name_scope('accuracy'):
+            x = tf.nn.softmax(x, dim=1, name='softmax')
+            xx = tf.argmax(x, axis=1)
+            yy = tf.argmax(y, axis=1)
+            correct = tf.cast(tf.equal(xx, yy), tf.float32m
+            return tf.reduce_mean(correct)
+        
     def func_loss(self, x, y):# {{{
         '''
             input:
@@ -103,7 +111,9 @@ class Network(object):
 
         self.loss_op = cross_entropy_loss + \
                 l2_regularization_loss
+        self.accuracy = self.func_accuracy(x, y)
         tf.summary.scalar('total loss', self.loss_op)
+        tf.summary.scalar('accuracy', self.accuracy)
         
         #   optimizer & learning rate
         # self.optimizer = tf.train.AdamOptimizer(\
