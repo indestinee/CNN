@@ -70,11 +70,11 @@ class Flowers(object):
             'is_training': False
         }
     def get_test(self, batch_size):
-        indexes = np.random.choice(self.test_list, batch_size)
-        return {
-            'input_data': np.array(self.test.image[indexes]),
-            'label': np.array(self.test.label[indexes]),
-            'is_training': False
-        }
+        for i in range(0, len(self.test_list), batch_size):
+            yield {
+                'input_data': np.array(self.test.image[i:i+batch_size]),
+                'label': np.array(self.test.label[i:i+batch_size]),
+                'is_training': False
+            }
 
 

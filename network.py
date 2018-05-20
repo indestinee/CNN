@@ -39,7 +39,7 @@ class Network(object):
         '''
         with tf.name_scope('prediction'):
             _class = tf.argmax(x, axis=1)
-            _score = tf.nn.softmax(x, name="softmax_tensor")
+            _score = tf.nn.softmax(x, dim=1, name="softmax_tensor")
             return _class, _score
     # }}}
     def func_loss(self, x, y):# {{{
@@ -179,5 +179,37 @@ class Network(object):
                     val_writer.add_summary(val_summary, step)
                     self.show_epoch(step, loss, val_loss)
         print('[LOG] Training finished ..')
+            
+    # }}}
+    def test(self):# {{{
+        #   initializer all variables
+        init = tf.global_variables_initializer()
+
+        #   saver to save/restore model to/from path
+        saver = tf.train.Saver()
+
+        #   tf session
+        with tf.Session() as sess:
+
+            #   run initalizer for all variables
+            sess.run(init)
+
+            #   load pre-trained model if needed
+            try:
+                print('[LOG] loading model from', self.args.checkpoint)
+                saver.restore(sess, self.args.checkpoint)
+            except:
+                print('[ERR] load model failed..')
+                exit(-1)
+
+            print('[LOG] testing started ..')
+            step, self.start_time = 0, time()
+            
+            while test_data in data_provider.dp.get_test(self.args.batch_size):
+                prediction = sess.run([self.predict_op], \
+                        feed_dict=self.feed_dict(test_data))
+                print(test_data)
+                print(prediction)
+        print('[LOG] testing finished ..')
             
     # }}}
