@@ -12,7 +12,7 @@ class Sample(object):
         self.label = np.array(self.label)
 
 class Flowers(object):
-    def __init__(self, shape, train=7, val=3, test=2):
+    def __init__(self, shape, train=7, val=1, test=2):
         self.labels = 17   
         
         #   read data from cache or origin tgz
@@ -23,12 +23,23 @@ class Flowers(object):
             self.data = load_flowers17('./data/17flowers.tgz', shape)
             cache.save(self.data)
         
-        self.train, self.val, self.test = Sample(), Sample(), Sample()
-        self.split_data(train, val, test)
+        path = './data/flowers17.pkl'
+        if os.path.isfile(path):
+            with open(path, 'rb') as f:
+                self.train, self.val, self.test = pickle.load(f)
+        else:
+            self.train, self.val, self.test = \
+                    Sample(), Sample(), Sample()
+            self.split_data(train, val, test)
 
-        self.train.to_np()
-        self.val.to_np()
-        self.test.to_np()
+            self.train.to_np()
+            self.val.to_np()
+            self.test.to_np()
+            with open(path, 'wb') as f:
+                pickle.dump([self.train, self.val, self.test], f)
+        self.train_list = range(len(self.train.image))
+        self.val_list = range(len(self.val.image))
+        self.test_list = range(len(self.test.image))
 
     def split_data(self, a, b, c):
         s = a + b + c
@@ -51,9 +62,6 @@ class Flowers(object):
             self.val.label += [labels for i in range (_b - _a)]
             self.test.label += [labels for i in range (_c - _b)]
 
-        self.train_list = range(len(self.train.image))
-        self.val_list = range(len(self.val.image))
-        self.test_list = range(len(self.test.image))
 
     def get_train(self, batch_size):
         indexes = np.random.choice(self.train_list, batch_size)
